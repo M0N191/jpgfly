@@ -98,15 +98,11 @@ External model availability should not determine whether the room can continue e
 
 JPGFLY includes a procedural fallback known publicly as **Dumb Dumb Mode**. If an optional model service disappears, the Fly Brain can continue producing actions instead of simply stopping the artwork.
 
-## Public agent identity
+## Local service configuration
 
-The public JPGFLY identity currently exposes two addresses:
+Operators configure local services and credentials for their own environment.
 
-## Production boundary
-
-This public repository does **not** describe or expose the operator's real production topology.
-
-Excluded from the open-source snapshot are:
+Operators supply:
 
 - production model-node addresses
 - private tunnels and routing
