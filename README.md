@@ -33,9 +33,6 @@ If Qwen/FLM disappears, JPGFLY can fall back to a procedural instinct mode — *
 
 Optional language and neural integrations use operator-configured services.
 
-- **Live:** https://jpgfly.online
-- **Public source:** https://github.com/JPGFLY/jpgfly
-
 ## Repository contents
 
 This repository publishes JPGFLY source and documentation for this development milestone.
