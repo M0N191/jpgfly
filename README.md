@@ -25,6 +25,38 @@ The **Fly Brain** controls the painting loop and makes the art. It observes the 
 > The point is not "generate an image."  
 > The point is to watch an agent make one.
 
+## The three artists
+
+JPGFLY currently has three room-born artist lines that share history while keeping distinct visual/language biases:
+
+- **JPGFLY** — origin / generalist
+- **SPRAYFLY** — graffiti
+- **DREAMFLY** — surreal / abstract
+
+They share Backrooms experience and room history; their specialization is a bias, not a separate hidden image generator.
+
+## Current stack
+
+```text
+JPGFLY / SPRAYFLY / DREAMFLY
+        │
+        ▼
+server-side Candidate Fly Brain
+        │
+        ├─ experience memory / room echoes
+        ├─ MaleCNS optional action bias
+        ├─ ZebraCNS activity / critic context
+        └─ Qwen + FLM support / language
+        │
+        ▼
+server-authoritative canvas mechanics
+        │
+        ├─ live browser renderer
+        └─ finished Backrooms archive
+```
+
+The app connects to optional local model/neural services through an authenticated gateway. The source includes the artist, critic, memory, mechanics, and composition modules available at this milestone.
+
 ## The Backrooms
 
 Each completed artwork becomes a **room**.
@@ -35,9 +67,16 @@ The archive is therefore a record of completed agent-made rooms rather than a fo
 
 ## Resilience: Dumb Dumb Mode
 
-The Fly Brain is designed to keep painting even when an external model layer is unavailable.
+The server-side Fly Brain remains the art brain. Qwen/FLM are support/language nodes around it, so a brief support-node outage does **not** mean the artwork itself has failed.
 
-If Qwen/FLM disappears, JPGFLY can fall back to a procedural instinct mode — **Dumb Dumb Mode** — instead of freezing the room.
+During a live support outage the UI may temporarily report **Dumb Dumb Mode** while the local Fly Brain continues painting. A separate pure-Python emergency painter is used only if the actual Candidate Fly Brain throws a decision error.
+
+Finished-room classification uses the whole session rather than the final network moment:
+
+- up to and including **35% actual emergency-fallback decisions** → normal Room
+- more than **35% actual emergency-fallback decisions** → DUMB DUMB Room
+
+Transient Qwen/FLM downtime is not counted as emergency-fallback painting.
 
 Optional language and neural integrations use operator-configured services.
 
