@@ -218,7 +218,6 @@ def load_artwork_record(session_id):
         if expected!=hashes["completion"]:return None
     if not _archive_record_visible(record):return None
     public_record=json.loads(canonical(record))
-    public_provenance=dict(public_record.get("provenance") or {})
     return public_record
 
 def load_artworks():
