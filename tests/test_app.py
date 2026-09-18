@@ -30,7 +30,7 @@ class JPGFLYAppTests(unittest.TestCase):
     def test_room_numbers_are_atomic_and_monotonic(self):
         self.assertEqual(jpgfly.next_room_number(),1);self.assertEqual(jpgfly.next_room_number(),2);self.assertEqual(jpgfly.next_room_number(),3)
 
-    def test_session_creation(self):
+    def test_session_creation_needs_no_external_identity(self):
         session=asyncio.run(jpgfly.create_session(jpgfly.StartRequest(seed=1)))
 
     def test_python_brain_is_incremental_and_authoritative(self):
@@ -98,7 +98,7 @@ class JPGFLYAppTests(unittest.TestCase):
         final,_=asyncio.run(finish_session(seed=5));self.assertIn("eventHistoryHash",final["provenance"]);self.assertIn("decisionHistoryHash",final["provenance"]);self.assertIn("evaluationHistoryHash",final["provenance"]);self.assertNotIn("movementReplayEvents",final["provenance"]);self.assertNotIn("completeFlyActionHistory",final["provenance"])
 
     def test_room_completion_time_and_provenance_are_utc(self):
-        final,_=asyncio.run(finish_session(seed=6));self.assertTrue(final["completed_at"].endswith("+00:00"));self.assertEqual(final["provenance"]["timeStandard"],"UTC")
+        final,_=asyncio.run(finish_session(seed=6));self.assertTrue(final["completed_at"].endswith("+00:00"));self.assertEqual(final["provenance"]["timeStandard"],"UTC");self.assertIn("timeStandard",final["provenance"])
 
     def test_archive_keeps_only_compressed_image_and_text_manifest(self):
         final,_=asyncio.run(finish_session())
