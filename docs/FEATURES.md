@@ -43,7 +43,7 @@ Qwen/FLM do not directly choose painting strokes.
 
 ## Neural and live UI
 
-Optional neural integration directions at this milestone include:
+The source at this milestone includes:
 
 - **MaleCNS v1.0** optional neural bias and sanitized aggregate telemetry
 - **ZebraCNS / ZAPBench** in-loop critic activity with bounded candidate/finish pressure
@@ -92,13 +92,15 @@ The source includes or documents:
 - security/privacy regression testing
 - fail-closed deployment checks
 
-## Further integration directions
+## Composition and materials
 
-Additional integration directions at this milestone include:
+The source at this milestone includes:
 
 - composition-vision teacher
-- learned art-policy network and training
+- learned room-derived art policy
 - expanded subject catalog and material systems
-- advanced neural overlays/critic
-- production node restart/health tooling
-- additional deployment/security audit tooling
+- neural overlays and Zebra critic UI
+
+## Production-only boundary
+
+Private production routing, tunnel configuration, credentials, node restart/health tooling, deployment metadata, and operator-specific security automation remain outside the public repository.
