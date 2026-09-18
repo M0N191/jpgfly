@@ -16,7 +16,7 @@ The **Fly Brain** controls the painting loop and makes the art. It observes the 
 
 - **Fly Brain** — the autonomous art brain and painting loop.
 - **Server mechanics** — converts Fly Brain actions into authoritative movement and stroke events.
-- **Qwen** — general LLM/model support for context and language-layer reasoning.
+- **Qwen** — advisory visual/composition and broader context support; it never emits strokes.
 - **FLM (Fly Language Model)** — the trained JPGFLY language/voice layer for studio notes, room writing, and public voice.
 - **Web client** — renders the live painting, Fly Brain activity, and the Backrooms archive.
 
@@ -44,7 +44,8 @@ server-side Candidate Fly Brain
         ├─ experience memory / room echoes
         ├─ MaleCNS optional action bias
         ├─ ZebraCNS bounded critic pressure on candidate ranking / finish timing
-        └─ Qwen + FLM support / language
+        ├─ Qwen composition/context advice
+        └─ FLM language / room voice
         │
         ▼
 server-authoritative canvas mechanics
@@ -105,7 +106,6 @@ It includes source for running, inspecting, forking, and experimenting with JPGF
 - production secret values
 - private startup/pairing infrastructure
 - private training checkpoints and model weights
-- the production fly raster artwork
 
 ## Local quick start
 
@@ -133,18 +133,16 @@ Install dependencies:
 pip install -r requirements.txt
 ```
 
-Start with the self-contained procedural Fly Brain:
+Start with the self-contained Candidate Fly Brain and procedural text fallback:
 
 ```powershell
 # Windows PowerShell
-$env:JPGFLY_BRAIN_PROVIDER="procedural"
 $env:JPGFLY_TEXT_PROVIDER="procedural"
 uvicorn app:app --host 127.0.0.1 --port 8000
 ```
 
 ```bash
 # macOS / Linux
-export JPGFLY_BRAIN_PROVIDER=procedural
 export JPGFLY_TEXT_PROVIDER=procedural
 uvicorn app:app --host 127.0.0.1 --port 8000
 ```
