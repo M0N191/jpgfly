@@ -162,12 +162,16 @@ To attach your own Qwen/FLM services, copy `.env.example` and supply **your own*
 ## Repository map
 
 ```text
-app.py                 API, sessions, archive, public studio state
+app.py                 self-host API/session/archive harness
 brain_provider.py      Fly Brain providers and action schema
-candidate_brain.py     candidate/action generation
-composition_engine.py  composition logic
+candidate_brain.py     candidate/action generation + bounded Zebra critic pressure
+agent_profiles.py      JPGFLY / SPRAYFLY / DREAMFLY visual disciplines
+art_policy.py          learned room-derived art policy
+composition_engine.py  procedural composition logic
+composition_vision.py  advisory canvas-composition analysis
+zebracns.py            ZebraCNS critic telemetry + scoring state
 server_mechanics.py    authoritative movement + stroke execution
-experience_memory.py   room-derived experience memory
+experience_memory.py   room-derived experience + lineage memory
 flm_text_provider.py   FLM language integration
 flm_bridge.py          FLM bridge interface
 web/                   live room, archive, renderer, UI
