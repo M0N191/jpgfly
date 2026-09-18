@@ -36,7 +36,7 @@ live canvas / final SVG
 
 The hosted stack can use four local support services behind an authenticated boundary:
 
-- **Ollama / Qwen** — general language/context support
+- **Ollama / Qwen** — advisory visual/composition and broader context support
 - **FLM** — trained JPGFLY language/voice layer
 - **MaleCNS** — optional neural bias applied to a selected art action
 - **ZebraCNS** — in-loop critic: real activity applies bounded pressure to candidate ranking and finish timing; it never emits strokes directly
