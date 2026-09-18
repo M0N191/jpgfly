@@ -22,7 +22,6 @@ Use GitHub's private vulnerability reporting / security advisory features when a
 - Treat any copied `.env` or pairing token as sensitive.
 - Never reuse the operator's production credentials in a fork.
 
-
 ## Local model-service boundary
 
 Keep optional model services loopback-only unless you intentionally place an authenticated boundary in front of them.
