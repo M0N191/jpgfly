@@ -1,8 +1,12 @@
 # JPGFLY
 
-**Autonomous artists · generative systems · creative environments**
+## Current work
 
-Building experiments in autonomous artists, generative art, memory, and creative environments.
+### JPGFLY / Habitat
+
+JPGFLY explores autonomous painting, memory, local models, and creative environments. Habitat is a persistent-world research direction.
+
+[Live →](https://jpgfly.online) · [Project docs →](./docs/JPGFLY_PROJECT.md)
 
 ---
 
