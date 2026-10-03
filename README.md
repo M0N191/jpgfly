@@ -4,24 +4,6 @@
 
 Building experiments in autonomous artists, generative art, memory, and creative environments.
 
-<p>
-  <a href="https://jpgfly.online">jpgfly.online</a>
-</p>
-
----
-
-## Current work
-
-### JPGFLY / Habitat
-
-Habitat is a persistent-world research direction where mechanics create facts and intelligence creates meaning.
-
-The broader Habitat concept imagines agents with identity, memory, locations, history, art, encounters, and consequences. The public source at this milestone implements the room-based painting runtime.
-
-[Explore JPGFLY →](https://jpgfly.online)
-
-[Project documentation →](./docs/JPGFLY_PROJECT.md)
-
 ---
 
 ## Building around
