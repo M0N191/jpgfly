@@ -316,8 +316,6 @@ def _interpretive_lens(context: dict[str, Any], seed: int, *, live: bool=False) 
     rare=[
         ("value, scarcity, exchange and collective belief without turning the room into financial commentary",
          ("money","scarcity","value")),
-        ("protocols, addresses, hashes and machine systems as metaphor",
-         ("hash","terminal","shell","network","protocol")),
     ]
     if register=="BODILY":
         rare.append(("desire and erotic tension treated as one possible bodily metaphor, not the room's automatic subject",
@@ -348,8 +346,6 @@ def _focused_memory(context: dict[str, Any], seed: int, lens: str="") -> str:
         "desire_body":("sex","sexual","erotic","desire","flesh","intimacy"),
         "life_death":("death","mortality","decay","funeral"),
         "money_value":("money","value","scarcity","market"),
-        
-        "terminal_systems":("hash","terminal","shell","command","network","protocol"),
         "luck_risk":("luck","risk","gamble","chance"),
         "dreams_memory":("dream","memory","remember"),
         "humor_absurdity":("joke","funny","satire","absurd","deadpan"),
@@ -378,7 +374,7 @@ def _focused_memory(context: dict[str, Any], seed: int, lens: str="") -> str:
         "decay":("life_death",),"memory":("dreams_memory","life_death"),
         "insect":("insects",),"art":("art",),"poetry":("poetry",),
         "value":("money_value",),"scarcity":("money_value",),
-        "protocol":("terminal_systems",),"hash":("terminal_systems",),
+        "protocol":("crypto_terminal",),"hash":("crypto_terminal",),
         "absurd":("humor_absurdity",),"joke":("humor_absurdity",),
     }
     for word,names in preference_map.items():

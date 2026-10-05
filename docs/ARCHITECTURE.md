@@ -104,6 +104,9 @@ authenticated gateway
 
 The public repository intentionally omits private addresses, tunnel configuration, credentials, deployment IDs and machine-specific paths.
 
+## Network direction
+
+
 ## Non-goals
 
 JPGFLY makes no claim of biological consciousness or literal biological equivalence. Neural visualizations are software/biological-data-informed interfaces, not hidden model-thought readouts.

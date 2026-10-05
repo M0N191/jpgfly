@@ -22,7 +22,6 @@ from experience_memory import record_room_experience
 from art_policy import train_from_decisions as train_art_policy_from_decisions, get_art_policy
 from zebracns import public_zebracns_state
 from subject_catalog import drawable_catalog
-from local_input_guard import local_input_snapshot
 from agent_profiles import AGENT_PROFILES, AGENT_ROTATION, get_agent_profile, normalize_agent_profile, public_agent_profiles
 
 ROOT=Path(__file__).resolve().parent; WEB=ROOT/"web"
@@ -926,7 +925,7 @@ def public_drawables():
 
 @app.get("/api/config")
 def public_config():
-    return {"project":"JPGFLY","build":BUILD_ID,"agents":public_agent_profiles(),"mode":"BACKROOMS","archiveMode":"image+text","replayStorage":False,"videoStorage":False,"timeStandard":TIME_STANDARD,"brainMode":configured_brain_mode(),"textProvider":configured_text_provider().upper(),"modelStack":"QWEN + FLM","artBrain":"FLY BRAIN","visualEngine":"FLY BRAIN","flyLanguageModel":"FLM","zebraCNS":"LOCAL-FIRST REAL ACTIVITY + CRITIC","autonomousStudio":os.environ.get("JPGFLY_AUTONOMOUS_STUDIO","true").lower()!="false","currentStudioSession":CURRENT_STUDIO_ID}
+    return {"project":"JPGFLY","build":BUILD_ID,"agents":public_agent_profiles(),"mode":"BACKROOMS","archiveMode":"image+text","replayStorage":False,"videoStorage":False,"timeStandard":TIME_STANDARD,"brainMode":configured_brain_mode(),"textProvider":configured_text_provider().upper(),"modelStack":"QWEN + FLM","artBrain":"FLY BRAIN","visualEngine":"FLY BRAIN","flyLanguageModel":"FLM","zebraCNS":"LOCAL-FIRST REAL ACTIVITY + CRITIC","autonomousStudio":os.environ.get("JPGFLY_AUTONOMOUS_STUDIO","false").lower()!="false","currentStudioSession":CURRENT_STUDIO_ID}
 
 @app.get("/api/public/activity")
 def public_activity():return {"mode":"LIVE","events":PUBLIC_ACTIVITY}
@@ -1079,11 +1078,11 @@ def public_malecns_network():
 
 
 @app.get("/api/version")
-def version():return {"build":BUILD_ID,"mode":"BACKROOMS","autonomousStudio":os.environ.get("JPGFLY_AUTONOMOUS_STUDIO","true").lower()!="false"}
+def version():return {"build":BUILD_ID,"mode":"BACKROOMS","autonomousStudio":os.environ.get("JPGFLY_AUTONOMOUS_STUDIO","false").lower()!="false"}
 
 @app.get("/api/health")
 def health():
-    enabled=os.environ.get("JPGFLY_AUTONOMOUS_STUDIO","true").lower()!="false"
+    enabled=os.environ.get("JPGFLY_AUTONOMOUS_STUDIO","false").lower()!="false"
     session=SESSIONS.get(CURRENT_STUDIO_ID) if CURRENT_STUDIO_ID else None
     return {"ok":True,"project":"JPGFLY","build":BUILD_ID,"studio":{"enabled":enabled,"state":session.get("status") if session else "BETWEEN_ROOMS","decisionCount":session.get("decision_count",0) if session else 0,"lastProgressAt":STUDIO_PROGRESS_WALL,"secondsSinceProgress":round(max(0.0,time.monotonic()-STUDIO_PROGRESS_AT),1)},"textProvider":configured_text_provider().upper(),"archiveMode":"image+text","persistentVolume":bool(os.environ.get("RAILWAY_VOLUME_MOUNT_PATH","").strip()) if os.environ.get("RAILWAY_ENVIRONMENT") else None,"rooms":len(ARTWORKS)}
 
@@ -1099,7 +1098,7 @@ def studio_current():
 @app.get("/api/studio/status")
 def studio_status():
     session=SESSIONS.get(CURRENT_STUDIO_ID) if CURRENT_STUDIO_ID else None
-    return {"enabled":os.environ.get("JPGFLY_AUTONOMOUS_STUDIO","true").lower()!="false","session_id":CURRENT_STUDIO_ID,"state":session.get("status") if session else "BETWEEN_ROOMS","decision_count":session.get("decision_count",0) if session else 0,"rooms":len(ARTWORKS)}
+    return {"enabled":os.environ.get("JPGFLY_AUTONOMOUS_STUDIO","false").lower()!="false","session_id":CURRENT_STUDIO_ID,"state":session.get("status") if session else "BETWEEN_ROOMS","decision_count":session.get("decision_count",0) if session else 0,"rooms":len(ARTWORKS)}
 
 install_studio_delta(app, lambda: CURRENT_STUDIO_ID, SESSIONS, load_artwork_record, canonical, configured_text_provider)
 
@@ -1626,7 +1625,7 @@ async def studio_watchdog_loop():
     global CURRENT_STUDIO_ID
     while True:
         await asyncio.sleep(15)
-        if os.environ.get("JPGFLY_AUTONOMOUS_STUDIO","true").lower()=="false":
+        if os.environ.get("JPGFLY_AUTONOMOUS_STUDIO","false").lower()=="false":
             continue
         task=getattr(app.state,"studio_task",None)
         stale_seconds=max(0.0,time.monotonic()-STUDIO_PROGRESS_AT)
@@ -1674,7 +1673,7 @@ async def studio_watchdog_loop():
 @app.on_event("startup")
 async def start_autonomous_studio():
     validate_deployment_environment()
-    if os.environ.get("JPGFLY_AUTONOMOUS_STUDIO","true").lower()=="false":return
+    if os.environ.get("JPGFLY_AUTONOMOUS_STUDIO","false").lower()=="false":return
     mark_studio_progress()
     app.state.studio_task=asyncio.create_task(autonomous_studio_loop())
     app.state.studio_watchdog_task=asyncio.create_task(studio_watchdog_loop())

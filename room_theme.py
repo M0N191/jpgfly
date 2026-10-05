@@ -16,6 +16,7 @@ from typing import Any
 from agent_profiles import get_agent_profile
 
 THEMES=(
+    {"id":"TERMINAL_AND_SYSTEMS","weight":0.11,"keywords":("terminal","shell","cli","command","hash","network","protocol"),"prompt":"terminal and machine culture: commands, protocols, networks, computation, errors, and rituals as visual metaphors."},
     {
         "id":"DESIRE_AND_SEX",
         "weight":0.26,
@@ -45,12 +46,6 @@ THEMES=(
         "weight":0.12,
         "keywords":("joke","funny","absurd","stupid","ridiculous","embarrassing","deadpan","satire"),
         "prompt":"dry jokes, embarrassment, stupidity, absurdity, bad taste, ridiculous visual logic, deadpan comedy, or a punchline that emerges from the image rather than being pasted onto it.",
-    },
-    {
-        "id":"TERMINAL_AND_SYSTEMS",
-        "weight":0.11,
-        "keywords":("hash","terminal","shell","command","network","protocol","system"),
-        "prompt":"terminal and systems culture: hashes, interfaces, shells, commands, networks, protocols, machine rituals, or how people interpret technical systems.",
     },
     {
         "id":"MORTALITY_AND_BODY",
@@ -110,7 +105,7 @@ def choose_room_theme(context:dict[str,Any],seed:int)->dict[str,str]:
         weight=float(item["weight"])
         hits=sum(1 for word in item["keywords"] if re.search(r"\b"+re.escape(word)+r"\b",recent))
         if hits:
-            # Reduce repetition, but never ban a subject. Sex/systems/jokes should
+            # Reduce repetition, but never ban a subject. Sex/computation/jokes should
             # recur as part of the persona rather than appear once and disappear.
             weight*=0.34 if hits>=2 else 0.58
         ids.append(item["id"])

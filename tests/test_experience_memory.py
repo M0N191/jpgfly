@@ -22,20 +22,21 @@ class ExperienceMemoryTests(unittest.TestCase):
         self.temp.cleanup()
 
     def test_reading_builds_topic_memory_once(self):
-        text = "The painting speaks about memory, death, money, painting and flies. " * 4
+        text = "The painting speaks about memory, death, money, terminal networks and flies. " * 4
         first = memory.record_reading(text, source="essay.txt", title="Essay")
         second = memory.record_reading(text, source="essay.txt", title="Essay")
         self.assertEqual(first["readings_seen"], 1)
         self.assertEqual(second["readings_seen"], 1)
         self.assertGreater(first["topics"].get("art", 0), 0)
+        self.assertGreater(first["topics"].get("terminal_systems", 0), 0)
         self.assertGreater(first["topics"].get("insects", 0), 0)
         self.assertTrue(first["topic_passages"].get("dreams_memory"))
 
     def test_philosophy_adult_humor_and_terminal_systems_topics(self):
         text = (
-            "A philosopher jokes about desire and flesh while a command runs across a terminal "
-            "through a terminal shell. The hash identifies a file, the command changes, a process "
-            "returns system state, and the punchline is absurd."
+            "A philosopher jokes about desire and flesh while a transaction flashes across a terminal "
+            "through a terminal shell. The hash enters a block, the nonce changes, an RPC call "
+            "returns chain state, and the punchline is absurd."
         )
         data = memory.record_reading(text, source="topics.txt", title="Topics")
         self.assertGreater(data["topics"].get("philosophy", 0), 0)

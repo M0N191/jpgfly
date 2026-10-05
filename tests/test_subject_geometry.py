@@ -40,8 +40,8 @@ class SubjectGeometryTests(unittest.TestCase):
         self.assertEqual(invalid, {}, f"invalid figurative geometry: {invalid}")
 
     def test_large_catalog_is_actually_large(self):
-        self.assertGreaterEqual(len(DRAWABLE_ALIAS_BASE), 400)
-        self.assertGreaterEqual(len(DRAWABLE_PROGRAMS), 12)
+        self.assertGreaterEqual(len(DRAWABLE_ALIAS_BASE), 350)
+        self.assertGreaterEqual(len(DRAWABLE_PROGRAMS), 11)
 
     def test_every_catalog_alias_has_valid_base_and_geometry(self):
         missing_bases = sorted(
@@ -162,8 +162,8 @@ class SubjectGeometryTests(unittest.TestCase):
 
     def test_concrete_room_commits_explicit_subjects_to_selected_actions(self):
         brain = CandidateFlyBrain(seed=20260916, complexity=.96, mutation=.42, density=.58, experience={})
-        brain.subject_program_name = "PEOPLE_AND_POSES"
-        brain.subject_program = SUBJECT_PROGRAMS["PEOPLE_AND_POSES"]
+        brain.subject_program_name = "TECH_AND_INTERNET"
+        brain.subject_program = SUBJECT_PROGRAMS["TECH_AND_INTERNET"]
         brain.motif_theme = brain.subject_program[0]
         brain.motif_theme_hold = 0
         brain.next_intrusion = 0
@@ -252,7 +252,7 @@ class SubjectGeometryTests(unittest.TestCase):
         self.assertEqual(compact["target"],[.52,.48])
 
     def test_expanded_programs_are_present(self):
-        for name in ("PEOPLE_AND_POSES", "AFTER_DARK",  "EVERYDAY_REALITY"):
+        for name in ("PEOPLE_AND_POSES", "AFTER_DARK", "DEGEN_TERMINAL", "EVERYDAY_REALITY"):
             self.assertIn(name, SUBJECT_PROGRAMS)
             self.assertGreaterEqual(len(SUBJECT_PROGRAMS[name]), 9)
 

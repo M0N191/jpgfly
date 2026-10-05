@@ -29,7 +29,6 @@ TOPIC_TERMS = {
     "desire_body": ("desire", "sex", "sexual", "erotic", "eroticism", "lust", "body", "bodies", "flesh", "skin", "intimacy", "attraction", "naked", "nude"),
     "life_death": ("life", "death", "mortality", "dead", "funeral", "birth", "decay"),
     "money_value": ("money", "coin", "coins", "value", "price", "scarcity", "greed", "wealth", "market"),
-    
     "terminal_systems": ("terminal", "shell", "cli", "command", "hash", "network", "protocol"),
     "luck_risk": ("luck", "risk", "gamble", "chance", "fortune", "bet"),
     "dreams_memory": ("dream", "dreams", "memory", "memories", "remember"),
@@ -49,7 +48,6 @@ TOPIC_PRESSURES = {
     "desire_body": ("ORGANIC", "FIGURE_FIELD"),
     "life_death": ("EROSION", "RETURN"),
     "money_value": ("SYSTEM", "SCARCITY"),
-    
     "terminal_systems": ("SYSTEM", "NETWORK"),
     "luck_risk": ("CHANCE", "RUPTURE"),
     "dreams_memory": ("RETURN", "ECHO"),
