@@ -316,8 +316,6 @@ def _interpretive_lens(context: dict[str, Any], seed: int, *, live: bool=False) 
     rare=[
         ("value, scarcity, exchange and collective belief without turning the room into financial commentary",
          ("money","scarcity","value")),
-        ("protocols, addresses, hashes and machine systems as metaphor rather than crypto commentary",
-         ("hash","crypto","bitcoin","memecoin","blockchain")),
     ]
     if register=="BODILY":
         rare.append(("desire and erotic tension treated as one possible bodily metaphor, not the room's automatic subject",
@@ -348,8 +346,6 @@ def _focused_memory(context: dict[str, Any], seed: int, lens: str="") -> str:
         "desire_body":("sex","sexual","erotic","desire","flesh","intimacy"),
         "life_death":("death","mortality","decay","funeral"),
         "money_value":("money","value","scarcity","market"),
-        "crypto":("crypto","bitcoin","memecoin"),
-        "crypto_terminal":("hash","transaction","nonce","mempool","rpc","blockchain"),
         "luck_risk":("luck","risk","gamble","chance"),
         "dreams_memory":("dream","memory","remember"),
         "humor_absurdity":("joke","funny","satire","absurd","deadpan"),

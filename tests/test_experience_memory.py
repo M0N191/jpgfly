@@ -22,17 +22,17 @@ class ExperienceMemoryTests(unittest.TestCase):
         self.temp.cleanup()
 
     def test_reading_builds_topic_memory_once(self):
-        text = "The painting speaks about memory, death, money, Bitcoin and flies. " * 4
+        text = "The painting speaks about memory, death, money, terminal networks and flies. " * 4
         first = memory.record_reading(text, source="essay.txt", title="Essay")
         second = memory.record_reading(text, source="essay.txt", title="Essay")
         self.assertEqual(first["readings_seen"], 1)
         self.assertEqual(second["readings_seen"], 1)
         self.assertGreater(first["topics"].get("art", 0), 0)
-        self.assertGreater(first["topics"].get("crypto", 0), 0)
+        self.assertGreater(first["topics"].get("terminal_systems", 0), 0)
         self.assertGreater(first["topics"].get("insects", 0), 0)
         self.assertTrue(first["topic_passages"].get("dreams_memory"))
 
-    def test_philosophy_adult_humor_and_crypto_terminal_topics(self):
+    def test_philosophy_adult_humor_and_terminal_systems_topics(self):
         text = (
             "A philosopher jokes about desire and flesh while a transaction flashes across a terminal "
             "through a terminal shell. The hash enters a block, the nonce changes, an RPC call "
@@ -42,7 +42,7 @@ class ExperienceMemoryTests(unittest.TestCase):
         self.assertGreater(data["topics"].get("philosophy", 0), 0)
         self.assertGreater(data["topics"].get("desire_body", 0), 0)
         self.assertGreater(data["topics"].get("humor_absurdity", 0), 0)
-        self.assertGreater(data["topics"].get("crypto_terminal", 0), 0)
+        self.assertGreater(data["topics"].get("terminal_systems", 0), 0)
 
     def test_completed_room_creates_slow_visual_bias(self):
         record = {

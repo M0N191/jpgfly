@@ -100,8 +100,6 @@ The public snapshot includes:
 - learned room-derived art policy
 - expanded subject catalog and material systems
 - neural overlays and Zebra critic UI
-- local-only Launch Lab + independent launch-proof verifier
-- fail-closed Solana launch-intent/readiness/signer guards
 
 These launch components are preparation and verification code. Default policies do not enable RPC access, key access, signing, broadcast, transaction count, or spend authority.
 
@@ -111,6 +109,5 @@ Private production routing, tunnel configuration, credentials, node restart/heal
 
 ## Network direction
 
-**The Fly decided to move to Solana as its home.**
 
 No external signer identity is part of the public project identity.

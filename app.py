@@ -21,9 +21,7 @@ from room_theme import choose_room_theme
 from experience_memory import record_room_experience
 from art_policy import train_from_decisions as train_art_policy_from_decisions, get_art_policy
 from zebracns import public_zebracns_state
-from launch_lab import LaunchLabManager, LaunchLabError
 from subject_catalog import drawable_catalog
-from local_input_guard import local_input_snapshot
 from agent_profiles import AGENT_PROFILES, AGENT_ROTATION, get_agent_profile, normalize_agent_profile, public_agent_profiles
 
 ROOT=Path(__file__).resolve().parent; WEB=ROOT/"web"
@@ -116,8 +114,6 @@ class DecisionRequest(BaseModel):
 class FinalizeRequest(BaseModel):
     client_fingerprint:str=Field(default="",max_length=128)
 
-class LaunchHumanInputRequest(BaseModel):
-    kind:str=Field(default="unknown",min_length=1,max_length=48)
 
 def canonical(value):return json.dumps(value,sort_keys=True,separators=(",",":"),ensure_ascii=False)
 def mark_studio_progress():
@@ -151,22 +147,12 @@ def data_root():
     configured=os.environ.get("JPGFLY_DATA_DIR","").strip() or os.environ.get("RAILWAY_VOLUME_MOUNT_PATH","").strip()
     return Path(configured).expanduser().resolve() if configured else ROOT/".jpgfly"
 
-_LAUNCH_LAB_MANAGER:LaunchLabManager|None=None
 
-def launch_lab_manager():
-    global _LAUNCH_LAB_MANAGER
-    if _LAUNCH_LAB_MANAGER is None:
-        _LAUNCH_LAB_MANAGER=LaunchLabManager(data_root(),ROOT/"launch_policy.local.json")
-    return _LAUNCH_LAB_MANAGER
 
-def _require_local_launch_lab(request:Request):
-    host=request.client.host if request.client else ""
-    if not _is_loopback(host):
-        raise HTTPException(404)
 
 def _probe_launch_json(url:str,timeout:float=1.2):
     try:
-        request=urllib.request.Request(url,headers={"User-Agent":"JPGFLY-LaunchLab/1"})
+        request=urllib.request.Request(url,headers={"User-Agent":"JPGFLY-Local/1"})
         with urllib.request.urlopen(request,timeout=timeout) as response:
             if int(getattr(response,"status",200))!=200:return None
             return json.loads(response.read().decode("utf-8"))
@@ -180,31 +166,7 @@ def _probe_loopback_port(port:int,timeout:float=.45):
     except OSError:
         return False
 
-def launch_stack_health():
-    ollama=_probe_launch_json("http://127.0.0.1:11434/api/tags")
-    flm=_probe_launch_json("http://127.0.0.1:4680/health")
-    male=_probe_launch_json("http://127.0.0.1:4690/health")
-    zebra=_probe_launch_json("http://127.0.0.1:4770/health")
-    nodes={
-        "ollama":bool(ollama and isinstance(ollama.get("models"),list)),
-        "flm":bool(flm and flm.get("ok") is True and flm.get("loaded") is True),
-        "malecns":bool(male and male.get("dataset")=="MaleCNS v1.0"),
-        "zebracns":bool(zebra and zebra.get("ok") is True),
-        "gateway":_probe_loopback_port(4681),
-        "jpgfly_app":True,
-    }
-    return {"healthy":all(nodes.values()),"nodes":nodes}
 
-def launch_agent_context():
-    studio=SESSIONS.get(CURRENT_STUDIO_ID) if CURRENT_STUDIO_ID else None
-    return {
-        "build":BUILD_ID,
-        "brain_version":BRAIN_VERSION,
-        "studio_state":studio.get("status") if studio else None,
-        "studio_decisions":int(studio.get("decision_count",0) or 0) if studio else 0,
-        "art_policy":get_art_policy().status(),
-        "system_input":local_input_snapshot(),
-    }
 
 def storage_root():return data_root()/"artworks"
 
@@ -909,15 +871,7 @@ def index():return FileResponse(WEB/"live.html",headers=HTML_CACHE)
 def live():return FileResponse(WEB/"live.html",headers=HTML_CACHE)
 @app.get("/about")
 def about():return FileResponse(WEB/"index.html",headers=HTML_CACHE)
-@app.get("/launch-lab")
-def launch_lab_page(request:Request):
-    _require_local_launch_lab(request)
-    return FileResponse(WEB/"launch-lab.html",headers={"Cache-Control":"no-store"})
 
-@app.get("/launch-proof")
-def launch_proof_page(request:Request):
-    _require_local_launch_lab(request)
-    return FileResponse(WEB/"launch-proof.html",headers={"Cache-Control":"no-store"})
 @app.get("/archive")
 def archive():return FileResponse(WEB/"archive.html",headers=HTML_CACHE)
 @app.get("/artworks/{session_id}")
@@ -954,65 +908,13 @@ def asset(name:str):
     if not path.is_file():raise HTTPException(404)
     return FileResponse(path,headers=STATIC_CACHE)
 
-@app.get("/api/launch-lab/status")
-def launch_lab_status(request:Request):
-    _require_local_launch_lab(request)
-    manager=launch_lab_manager()
-    status=manager.status()
-    status["stack"]=launch_stack_health()
-    return status
 
-@app.post("/api/launch-lab/arm")
-def launch_lab_arm(request:Request):
-    _require_local_launch_lab(request)
-    try:return launch_lab_manager().arm(launch_stack_health(),launch_agent_context())
-    except LaunchLabError as exc:raise HTTPException(409,str(exc))
 
-@app.post("/api/launch-lab/human-input")
-def launch_lab_human_input(payload:LaunchHumanInputRequest,request:Request):
-    _require_local_launch_lab(request)
-    return launch_lab_manager().record_human_input(payload.kind)
 
-@app.post("/api/launch-lab/reset")
-def launch_lab_reset(request:Request):
-    _require_local_launch_lab(request)
-    return launch_lab_manager().reset()
 
-@app.get("/api/launch-lab/receipt")
-def launch_lab_receipt(request:Request):
-    _require_local_launch_lab(request)
-    try:return launch_lab_manager().receipt()
-    except LaunchLabError as exc:raise HTTPException(404,str(exc))
 
-@app.get("/api/launch-lab/bundle")
-def launch_lab_bundle(request:Request):
-    _require_local_launch_lab(request)
-    try:
-        bundle=launch_lab_manager().proof_bundle()
-    except LaunchLabError as exc:
-        raise HTTPException(404,str(exc))
-    filename=f"jpgfly-launch-proof-{bundle['session_id']}.json"
-    payload=json.dumps(bundle,ensure_ascii=False,separators=(",",":"))
-    return Response(
-        content=payload,
-        media_type="application/json",
-        headers={
-            "Content-Disposition":f'attachment; filename="{filename}"',
-            "Cache-Control":"no-store",
-        },
-    )
 
-@app.get("/api/launch-lab/verify")
-def launch_lab_verify(request:Request):
-    _require_local_launch_lab(request)
-    try:return launch_lab_manager().verify_session()
-    except LaunchLabError as exc:raise HTTPException(404,str(exc))
 
-@app.get("/api/launch-lab/sessions/{session_id}/verify")
-def launch_lab_verify_session(session_id:str,request:Request):
-    _require_local_launch_lab(request)
-    try:return launch_lab_manager().verify_session(session_id)
-    except LaunchLabError as exc:raise HTTPException(404,str(exc))
 
 
 @app.get("/api/drawables")
@@ -1023,7 +925,7 @@ def public_drawables():
 
 @app.get("/api/config")
 def public_config():
-    return {"project":"JPGFLY","build":BUILD_ID,"agents":public_agent_profiles(),"mode":"BACKROOMS","archiveMode":"image+text","replayStorage":False,"videoStorage":False,"timeStandard":TIME_STANDARD,"brainMode":configured_brain_mode(),"textProvider":configured_text_provider().upper(),"modelStack":"QWEN + FLM","artBrain":"FLY BRAIN","visualEngine":"FLY BRAIN","flyLanguageModel":"FLM","zebraCNS":"LOCAL-FIRST REAL ACTIVITY + CRITIC","autonomousStudio":os.environ.get("JPGFLY_AUTONOMOUS_STUDIO","true").lower()!="false","currentStudioSession":CURRENT_STUDIO_ID}
+    return {"project":"JPGFLY","build":BUILD_ID,"agents":public_agent_profiles(),"mode":"BACKROOMS","archiveMode":"image+text","replayStorage":False,"videoStorage":False,"timeStandard":TIME_STANDARD,"brainMode":configured_brain_mode(),"textProvider":configured_text_provider().upper(),"modelStack":"QWEN + FLM","artBrain":"FLY BRAIN","visualEngine":"FLY BRAIN","flyLanguageModel":"FLM","zebraCNS":"LOCAL-FIRST REAL ACTIVITY + CRITIC","autonomousStudio":os.environ.get("JPGFLY_AUTONOMOUS_STUDIO","false").lower()!="false","currentStudioSession":CURRENT_STUDIO_ID}
 
 @app.get("/api/public/activity")
 def public_activity():return {"mode":"LIVE","events":PUBLIC_ACTIVITY}
@@ -1176,11 +1078,11 @@ def public_malecns_network():
 
 
 @app.get("/api/version")
-def version():return {"build":BUILD_ID,"mode":"BACKROOMS","autonomousStudio":os.environ.get("JPGFLY_AUTONOMOUS_STUDIO","true").lower()!="false"}
+def version():return {"build":BUILD_ID,"mode":"BACKROOMS","autonomousStudio":os.environ.get("JPGFLY_AUTONOMOUS_STUDIO","false").lower()!="false"}
 
 @app.get("/api/health")
 def health():
-    enabled=os.environ.get("JPGFLY_AUTONOMOUS_STUDIO","true").lower()!="false"
+    enabled=os.environ.get("JPGFLY_AUTONOMOUS_STUDIO","false").lower()!="false"
     session=SESSIONS.get(CURRENT_STUDIO_ID) if CURRENT_STUDIO_ID else None
     return {"ok":True,"project":"JPGFLY","build":BUILD_ID,"studio":{"enabled":enabled,"state":session.get("status") if session else "BETWEEN_ROOMS","decisionCount":session.get("decision_count",0) if session else 0,"lastProgressAt":STUDIO_PROGRESS_WALL,"secondsSinceProgress":round(max(0.0,time.monotonic()-STUDIO_PROGRESS_AT),1)},"textProvider":configured_text_provider().upper(),"archiveMode":"image+text","persistentVolume":bool(os.environ.get("RAILWAY_VOLUME_MOUNT_PATH","").strip()) if os.environ.get("RAILWAY_ENVIRONMENT") else None,"rooms":len(ARTWORKS)}
 
@@ -1196,7 +1098,7 @@ def studio_current():
 @app.get("/api/studio/status")
 def studio_status():
     session=SESSIONS.get(CURRENT_STUDIO_ID) if CURRENT_STUDIO_ID else None
-    return {"enabled":os.environ.get("JPGFLY_AUTONOMOUS_STUDIO","true").lower()!="false","session_id":CURRENT_STUDIO_ID,"state":session.get("status") if session else "BETWEEN_ROOMS","decision_count":session.get("decision_count",0) if session else 0,"rooms":len(ARTWORKS)}
+    return {"enabled":os.environ.get("JPGFLY_AUTONOMOUS_STUDIO","false").lower()!="false","session_id":CURRENT_STUDIO_ID,"state":session.get("status") if session else "BETWEEN_ROOMS","decision_count":session.get("decision_count",0) if session else 0,"rooms":len(ARTWORKS)}
 
 install_studio_delta(app, lambda: CURRENT_STUDIO_ID, SESSIONS, load_artwork_record, canonical, configured_text_provider)
 
@@ -1723,7 +1625,7 @@ async def studio_watchdog_loop():
     global CURRENT_STUDIO_ID
     while True:
         await asyncio.sleep(15)
-        if os.environ.get("JPGFLY_AUTONOMOUS_STUDIO","true").lower()=="false":
+        if os.environ.get("JPGFLY_AUTONOMOUS_STUDIO","false").lower()=="false":
             continue
         task=getattr(app.state,"studio_task",None)
         stale_seconds=max(0.0,time.monotonic()-STUDIO_PROGRESS_AT)
@@ -1765,38 +1667,13 @@ async def studio_watchdog_loop():
             app.state.studio_task=asyncio.create_task(autonomous_studio_loop())
             mark_studio_progress()
 
-async def autonomous_launch_lab_loop():
-    manager=launch_lab_manager()
-    while True:
-        try:
-            stack=await asyncio.to_thread(launch_stack_health)
-            context=launch_agent_context()
-            manager.tick(stack,context)
-        except asyncio.CancelledError:
-            raise
-        except Exception:
-            LOGGER.exception("Local autonomous launch lab loop failed")
-        await asyncio.sleep(.5)
 
-@app.on_event("startup")
-async def start_local_launch_lab():
-    if public_deployment_mode() or os.environ.get("JPGFLY_LAUNCH_LAB","true").lower()=="false":
-        return
-    launch_lab_manager()
-    app.state.launch_lab_task=asyncio.create_task(autonomous_launch_lab_loop())
 
-@app.on_event("shutdown")
-async def stop_local_launch_lab():
-    task=getattr(app.state,"launch_lab_task",None)
-    if task and not task.done():
-        task.cancel()
-        try:await task
-        except asyncio.CancelledError:pass
 
 @app.on_event("startup")
 async def start_autonomous_studio():
     validate_deployment_environment()
-    if os.environ.get("JPGFLY_AUTONOMOUS_STUDIO","true").lower()=="false":return
+    if os.environ.get("JPGFLY_AUTONOMOUS_STUDIO","false").lower()=="false":return
     mark_studio_progress()
     app.state.studio_task=asyncio.create_task(autonomous_studio_loop())
     app.state.studio_watchdog_task=asyncio.create_task(studio_watchdog_loop())

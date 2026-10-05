@@ -80,7 +80,7 @@ class RoomTextRecoveryTests(unittest.TestCase):
     def test_ollama_voice_angle_does_not_force_recent_sensitive_topics(self):
         context={
             "visual_context":{"content_register":"FORMAL"},
-            "earlier_rooms":[{"room_description":"An old room about crypto, sex, and jokes."}],
+            "earlier_rooms":[{"room_description":"An old room about computation, sex, and jokes."}],
             "recent_public_notes":[],
         }
         angle=flm._interpretive_lens(context,19)

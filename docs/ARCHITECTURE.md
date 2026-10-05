@@ -104,14 +104,8 @@ authenticated gateway
 
 The public repository intentionally omits private addresses, tunnel configuration, credentials, deployment IDs and machine-specific paths.
 
-## Solana safety boundary
-
-The public source includes the launch-intent contract, readiness evaluator, signer guard, preparation policy, and their regression tests. They are **fail-closed preparation code**, not an enabled transaction path. Default policies keep execution, RPC access, key access, browser signing, generic signing, transaction count and spend budget disabled/zero until an operator deliberately supplies a separately reviewed policy.
-
 ## Network direction
 
-
-**The Fly decided to move to Solana as its home.**
 
 ## Non-goals
 

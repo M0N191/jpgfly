@@ -12,7 +12,7 @@ class RoomThemeTests(unittest.TestCase):
             "POETRY_AND_LANGUAGE",
             "PHILOSOPHY",
             "HUMOR_AND_ABSURDITY",
-            "CRYPTO_AND_TERMINAL",
+            "TERMINAL_AND_SYSTEMS",
         }.issubset(ids))
 
     def test_theme_is_deterministic_for_same_seed(self):
@@ -23,7 +23,7 @@ class RoomThemeTests(unittest.TestCase):
         context={"visual_context":{"content_register":"FORMAL"},"earlier_rooms":[]}
         found={choose_room_theme(context,seed)["id"] for seed in range(400)}
         self.assertIn("DESIRE_AND_SEX",found)
-        self.assertIn("CRYPTO_AND_TERMINAL",found)
+        self.assertIn("TERMINAL_AND_SYSTEMS",found)
         self.assertIn("HUMOR_AND_ABSURDITY",found)
 
     def test_required_instruction_is_explicit(self):

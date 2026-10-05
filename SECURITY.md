@@ -41,4 +41,3 @@ The Fly Brain itself is Python and can continue painting during short language/m
 
 ## Launch / signer safety
 
-The public launch-preparation code is fail-closed. The checked-in preparation/signer policies must keep execution, RPC access, key access, generic signing, browser-wallet signing, transaction count and spend authority disabled or zero by default. Treat any future change that enables one of those capabilities as a separate security review; never commit private keys, seed material, custody credentials, or production signer secrets.
