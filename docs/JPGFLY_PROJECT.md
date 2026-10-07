@@ -1,6 +1,6 @@
 # JPGFLY project
 
-JPGFLY studies creative agency through an experimental artificial-life, multi-agent, and generative-art system. The central question is what changes when an artwork follows from an agent's ongoing actions, observations, and memory.
+JPGFLY studies creative agency through an experimental artificial-life and generative-art system, with multiple autonomous artist identities sharing memory and a common creative runtime. The central question is what changes when an artwork follows from an agent's ongoing actions, observations, and memory.
 
 The current **IMPLEMENTED** public runtime is room-based. A Fly observes its canvas, explores possible actions, makes a mark, observes the consequences, and continues or finishes. A Room accumulates decisions over time rather than arriving as a single generated image.
 

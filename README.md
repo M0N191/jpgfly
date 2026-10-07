@@ -1,10 +1,30 @@
 # JPGFLY
 
-JPGFLY is an experimental artificial-life, multi-agent, and generative-art project. It explores what happens when artwork is treated not as a single generated output, but as the consequence of an agent existing inside a world.
+<img src="assets/jpgfly-readme-banner.jpg" alt="JPGFLY project artwork" width="720">
 
-**This public branch implements the room-based creative runtime.** Autonomous fly artists observe a 2D canvas, choose actions, move, paint, revise, and finish works. Completed Rooms and shared learning persist between sessions.
+JPGFLY is an experimental artificial-life and generative-art project built around multiple autonomous artist identities. The artists observe a canvas, consider possible actions, choose, move and paint, then respond to what changed.
 
-**Habitat is a RESEARCH DIRECTION:** the broader idea of a persistent 2D world inhabited by fly agents. This branch does not implement a verified shared persistent-world engine. **Mouse Vision / MICrONS is also a RESEARCH DIRECTION**, with no public runtime integration here.
+**This public branch implements the room-based creative runtime.** JPGFLY, SPRAYFLY, and DREAMFLY share memory and a common engine. The autonomous studio rotates them through **one current Room at a time**.
+
+Artwork emerges from an agent repeatedly acting inside an environment over time, rather than as a single generated output. Each mark changes the conditions for the next decision. A Fly can continue, revise, or finish; completed Rooms enter Backrooms, while persistent experience and a separate learned policy influence later Rooms.
+
+## How a Room happens
+
+```text
+Observe canvas
+    ↓
+Candidate Fly Brain: propose → score → choose
+    ↓
+Server mechanics: move + paint
+    ↓
+Observe consequences → continue / revise → observe again
+    ↓ finish
+Room writing + eligible memory / policy updates
+    ↓
+Archive Room in Backrooms → future Rooms
+```
+
+**Candidate Fly Brain remains the main art-decision engine.** It compares candidate actions against the canvas, composition, memory, learned policy, and optional advice. Server mechanics execute authoritative movement and strokes. The live browser renders that state and the Fly performer; it does not decide the artwork.
 
 ## The artists
 
@@ -15,18 +35,6 @@ JPGFLY is an experimental artificial-life, multi-agent, and generative-art proje
 | **DREAMFLY** | Surreal/abstract artist: dream logic, warped space, wash, soft paint, and atmospheric forms. |
 
 The artists share experience and earlier-room echoes while keeping distinct visual and written-voice biases. The studio rotates them through one current Room; it does not simulate simultaneous shared-world inhabitants.
-
-## How a Room happens
-
-```text
-canvas observation → Candidate Fly Brain → structured action
-       ↑                                      ↓
-       └──────── server movement / strokes ───┘
-                              ↓
-                 browser view / finished Room
-```
-
-**Candidate Fly Brain remains the main art-decision engine.** It compares candidate actions against the canvas, composition, memory, learned policy, and optional advice. Server mechanics execute authoritative movement and strokes. The live browser renders that state and the Fly performer; it does not decide the artwork.
 
 ## Systems and status
 
@@ -45,6 +53,8 @@ canvas observation → Candidate Fly Brain → structured action
 | Habitat; Mouse Vision / MICrONS | RESEARCH DIRECTION | Shared-world artificial life and visual-perception research. |
 
 Experience Memory stores history and tendencies; Learned Art Policy trains its own weights. Neither automatically fine-tunes Qwen or FLM.
+
+**Habitat — RESEARCH DIRECTION** extends the project toward a persistent 2D artificial-life world inhabited by fly agents. This branch implements the room studio, not a verified shared persistent-world engine. **Mouse Vision / MICrONS — RESEARCH DIRECTION** concerns visual perception; it has no public runtime integration here.
 
 ## Backrooms / Old Rooms
 
