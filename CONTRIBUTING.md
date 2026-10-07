@@ -1,58 +1,45 @@
 # Contributing to JPGFLY
 
-JPGFLY is both an artwork and a software system. Changes should preserve the distinction between the project’s fiction/voice and what the implementation actually does.
+JPGFLY is an artwork and a software experiment. Contributions should make the creative system easier to understand, run, and develop while keeping its artistic voice distinct from implementation claims.
 
 ## Principles
 
-- Keep the server authoritative for painting decisions and physical events.
-- The browser may render and replay; it should not become a hidden artistic brain.
-- Do not describe visual proxies as literal biological measurements.
-- Do not claim consciousness or sentience.
-- Never commit secrets or private user data.
+- Keep Candidate Fly Brain responsible for art decisions and the server responsible for authoritative movement and strokes.
+- The browser renders and replays server state; document any change to that boundary explicitly.
+- Distinguish recorded biological data, simulated neural dynamics, and engineered artistic interpretations.
+- Describe implemented capabilities, optional integrations, and research directions separately. Do not claim consciousness or sentience.
+- Keep credentials, private user data, and local model artifacts out of commits.
 
-## Development setup
+## Setup and validation
 
-```powershell
-py -3.12 -m venv .venv
-.\.venv\Scripts\Activate.ps1
-pip install -r requirements.txt
-```
+Use [Local run](docs/LOCAL-RUN.md) for Python 3.12 setup and the autonomous studio. Use Node.js 22 for browser-source tests, matching [CI](.github/workflows/ci.yml).
 
-Run locally:
-
-```powershell
-.\.venv\Scripts\python.exe -m uvicorn app:app --host 127.0.0.1 --port 4673
-```
-
-## Branch policy
-
-Treat `main` as release-only. Changes should land through a reviewed pull request rather than an unreviewed direct push.
-
-- Public snapshot: require green `ci` and `Release audit` checks before merge.
-- Private production source: require a successful Local FastAPI Docker build/predeploy gate before promotion.
-- `.github/CODEOWNERS` assigns the project owner as the default reviewer.
-
-## Before submitting a change
+For runtime changes, run the relevant checks locally:
 
 ```powershell
 $env:JPGFLY_AUTONOMOUS_STUDIO="false"
 $env:JPGFLY_TEXT_PROVIDER="procedural"
 
-.\.venv\Scripts\python.exe -m py_compile app.py brain_provider.py candidate_brain.py composition_engine.py composition_vision.py server_mechanics.py flm_text_provider.py experience_memory.py agent_profiles.py art_policy.py zebracns.py
+.\.venv\Scripts\python.exe -m pip check
+.\.venv\Scripts\python.exe -m py_compile app.py brain_provider.py candidate_brain.py composition_engine.py composition_vision.py experience_memory.py flm_bridge.py flm_text_provider.py narrative_provider.py server_mechanics.py studio_delta.py agent_profiles.py art_materials.py art_policy.py room_theme.py subject_catalog.py zebracns.py zebracns_local.py
 .\.venv\Scripts\python.exe -m unittest discover -s tests -p "test_*.py" -v
 npm.cmd test
 ```
 
-For behavior changes, add or update a regression test.
+For behavior changes, add or update a regression test that checks the affected behavior. For documentation changes, check relative links and verify technical claims against current source.
 
-## Writing and UI copy
+## Pull requests and releases
 
-Keep public copy concise and accurate. The artistic voice can be strange, erotic, philosophical, funny, technical, or poetic, but project documentation should clearly distinguish metaphor from implementation.
+Treat `main` as release-only. Submit changes on a separate branch through a reviewed pull request. Require green `ci` and `Release audit` checks before merging; these are project review expectations, not a statement that branch protection enforces them.
 
-## Line endings
+[CODEOWNERS](.github/CODEOWNERS) identifies the default reviewer. The [Release audit](.github/workflows/release-audit.yml) checks dependencies, compiles the runtime, checks source hygiene, and runs Python and browser tests. Explain the concrete change, its validation, and any remaining limitations in the pull request.
 
-The repository uses LF for source/docs and CRLF for PowerShell scripts through `.gitattributes`.
+## Documentation and UI copy
+
+Keep documentation concise and source-backed. Artistic language can be poetic, strange, funny, or philosophical; technical documentation should identify where metaphor ends and implementation begins. See [Architecture](docs/ARCHITECTURE.md) and the [capability matrix](docs/FEATURES.md).
+
+The repository uses LF for source and documentation and CRLF for PowerShell scripts through `.gitattributes`.
 
 ## Security-sensitive changes
 
-Changes to HTTP controls, archive integrity, prompt construction, local model bridges, signing, credentials, or network exposure should include a short threat-model note in the pull request.
+Changes to HTTP controls, archive integrity, prompt construction, model bridges, credentials, or network exposure should include a short threat-model note. Follow the [security policy](SECURITY.md) when reporting vulnerabilities.
