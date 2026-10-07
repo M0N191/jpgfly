@@ -93,5 +93,6 @@ See [LOCAL-RUN](docs/LOCAL-RUN.md) for other shells, explicit environment-file l
 - [Features](docs/FEATURES.md) — capability/status matrix
 - [History](docs/HISTORY.md) — public project evolution
 - [Contributing](CONTRIBUTING.md) and [Security](SECURITY.md)
+- [Third-party notices and research attribution](THIRD_PARTY_NOTICES.md)
 
 Source code is [MIT licensed](LICENSE). See [TRADEMARK](TRADEMARK.md) for project identity and branding.
