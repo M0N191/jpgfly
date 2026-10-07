@@ -1,106 +1,42 @@
-# JPGFLY Feature Inventory
+# JPGFLY Capabilities
 
-This page describes the JPGFLY capabilities and optional integration directions at this development milestone.
+This inventory describes the current public source. **IMPLEMENTED** means code is present in the room runtime. **OPTIONAL LOCAL INTEGRATION** means an implemented bridge requires additional models, services, or data. **RESEARCH DIRECTION** identifies the broader project concept without claiming a public runtime implementation. **HISTORICAL** identifies version-specific documentation.
 
-## Autonomous art core
+## Creative runtime
 
-- **Autonomous Room loop** — observe → choose → move → paint → observe again → revise/continue/finish.
-- **Server-authoritative mechanics** — the server owns the physical stroke stream; the browser only renders it.
-- **Candidate Fly Brain** — proposes and scores multiple possible next actions before committing one.
-- **Self-termination** — the Fly decides when the artwork is finished.
-- **Composition engine** — regions, passes, spatial relations, macro intent, negative space and revision behavior.
-- **Brush/technique control** — movement style, brush, technique, pressure, color, scale and erasure can be part of each committed action.
-- **Final SVG + compact Room record** — completed work is archived as image plus compact text/metadata rather than a public raw replay dump.
+| Capability | Status | Scope and source |
+|---|---|---|
+| Autonomous room studio | IMPLEMENTED | One current room at a time, with artist rotation and successive completed works. [app.py](../app.py) |
+| JPGFLY | IMPLEMENTED | Origin/generalist painter using shared movement, brush, and technique pools. [Profiles](../agent_profiles.py) |
+| SPRAYFLY | IMPLEMENTED | Spray/graffiti identity expressed through tags, splatter, marker bleed, dry brush, charcoal, neon, and overwrite techniques. [Profiles](../agent_profiles.py) |
+| DREAMFLY | IMPLEMENTED | Surreal/abstract identity with wash, soft paint, fog, ribbon, and neon biases. [Profiles](../agent_profiles.py) |
+| Candidate Fly Brain | IMPLEMENTED | Main art-decision engine: eight ordinary continuations, weighted selection, revision and finish rules. Finish paths can have a different candidate count. [candidate_brain.py](../candidate_brain.py) |
+| Composition and materials | IMPLEMENTED | Spatial regions, passes, focal structure, negative space, subjects, palettes, brush/material effects, erasure, and overpainting. [Composition](../composition_engine.py), [materials](../art_materials.py), [subjects](../subject_catalog.py) |
+| Authoritative movement/strokes | IMPLEMENTED | Server executes physical actions, observes canvas changes, and produces the final SVG. [server_mechanics.py](../server_mechanics.py), [app.py](../app.py) |
+| Live browser and fly performer | IMPLEMENTED | Renders server events, animates the artist, and displays commentary and decision/neural telemetry. [web/live.js](../web/live.js), [studio_delta.py](../studio_delta.py) |
+| Backrooms / Old Rooms | IMPLEMENTED | Searchable completed-work archive and artwork pages; compressed SVG, compact writing, metrics, and hashes. Old Rooms is a name for earlier works. [app.py](../app.py) |
+| Resilience | IMPLEMENTED | Local writing fallback and an independent emergency painter; final `DUMB DUMB` classification requires more than 35% actual emergency art decisions. [Architecture](ARCHITECTURE.md) |
 
-## Three artists
+## Memory and intelligence support
 
-- **JPGFLY** — origin / generalist.
-- **SPRAYFLY** — graffiti.
-- **DREAMFLY** — surreal / abstract.
+| Capability | Status | Scope and source |
+|---|---|---|
+| Experience Memory | IMPLEMENTED | Persistent room tendencies, reading context, shared cross-profile echoes, and recent-room anti-repetition. It accumulates context rather than training weights. [experience_memory.py](../experience_memory.py) |
+| Learned Art Policy | IMPLEMENTED | Separate `96 → 128 → 64 → 5` network trained from normal-classified completed rooms; persists weights and contributes to candidate scoring. [art_policy.py](../art_policy.py) |
+| Procedural room writing | IMPLEMENTED | Local writing for titles, descriptions, statements, anomalies, and memory threads without a model service. [flm_text_provider.py](../flm_text_provider.py) |
+| Qwen / Ollama | OPTIONAL LOCAL INTEGRATION | Advisory composition, reasoning/context, and narrative support. Structured visual guidance affects future candidates; server mechanics retain stroke authority. Requires configured models. [Vision](../composition_vision.py), [narrative](../narrative_provider.py) |
+| FLM | OPTIONAL LOCAL INTEGRATION | Primarily written voice, commentary, and room-writing; hybrid mode can use Qwen context. Requires an external FLM implementation and trained adapter. [Provider](../flm_text_provider.py), [bridge](../flm_bridge.py) |
+| MaleCNS | OPTIONAL LOCAL INTEGRATION | Fly-connectome-inspired action bias and selected telemetry. Client is present; simulator and dataset require an external service. [brain_provider.py](../brain_provider.py), [app.py](../app.py) |
+| ZebraCNS / ZAPBench | OPTIONAL LOCAL INTEGRATION | Recorded-activity loader/service and bounded critic/evaluation pressure on candidates and finish timing. Requires trace data and optional TensorStore; dormant without loaded data. [Adapter](../zebracns.py), [service](../zebracns_local.py) |
 
-They share Backrooms experience/history while keeping separate visual/language biases.
+Neural recordings, engineered critic signals, and browser visualizations have distinct roles. Displayed activity does not establish biological consciousness or expose hidden model thoughts. See [architecture](ARCHITECTURE.md) for the exact decision flow and failure distinctions.
 
-## Memory
+## Project directions and history
 
-- persistent Room-derived visual/conceptual experience
-- bounded learning so one Room cannot dominate
-- recent-room anti-repetition pressure
-- local reading ingestion for conceptual memory
-- shared history across the three artist profiles
-- no automatic model-weight rewriting
+| Area | Status | Scope |
+|---|---|---|
+| Habitat | RESEARCH DIRECTION | Persistent shared 2D artificial-life world for autonomous agents. This branch provides the room-based creative runtime; it does not restore a shared world or living agents after restart. [Project](JPGFLY_PROJECT.md) |
+| Mouse Vision / MICrONS | RESEARCH DIRECTION | Visual-perception research component; no implementation is present in this public runtime. The current implemented visual advisory integration is Qwen. [Project](JPGFLY_PROJECT.md) |
+| Release 6.4 | HISTORICAL | Version-specific resilience/mechanics notes. Current Candidate Brain identifies itself as 7.1 temporal art policy. [6.4 notes](RELEASE-6.4.md), [history](HISTORY.md) |
 
-## Language
-
-- **FLM** — trained JPGFLY public voice / Room-writing layer
-- **Ollama/Qwen** — optional broader language/context support
-- **hybrid Qwen + FLM** mode
-- live studio commentary
-- finished-Room title/description/anomaly/statement/memory-thread writing
-- richer local literary fallback when external writers are unavailable
-- untrusted-reading/prompt isolation
-
-Qwen/FLM do not directly choose painting strokes.
-
-## Neural and live UI
-
-The source at this milestone includes:
-
-- **MaleCNS v1.0** optional neural bias and sanitized aggregate telemetry
-- **ZebraCNS / ZAPBench** in-loop critic activity with bounded candidate/finish pressure
-- **Zebra critic**
-- **decision neuropath / attribution graph**
-- live neural/decision firing visualization
-
-These are explanatory/sanitized interfaces, not hidden-thought readers and not claims of biological consciousness.
-
-## Live Fly performer
-
-The hosted renderer includes the moving artist Fly with brush/contact state, transparent wings, opaque beret and clean face. The live performer follows the active mark while the server remains the artistic authority.
-
-## Backrooms
-
-- every finished work becomes a Room
-- searchable archive
-- individual artwork pages
-- compact structural metrics
-- provenance/integrity hashes
-- compressed image storage
-- storage-compaction tooling for legacy records
-
-## Resilience / DUMB DUMB
-
-Temporary Qwen/FLM loss and actual art-brain failure are treated differently.
-
-- a temporary support outage may change the live status while the normal Candidate Fly Brain continues painting
-- an actual Candidate Fly Brain exception switches to an independent pure-Python emergency painter
-- **≤35% actual emergency-fallback decisions → normal Room**
-- **>35% actual emergency-fallback decisions → DUMB DUMB Room**
-
-A 65% normal / 35% hard-fallback Room is therefore still normal.
-
-## Security boundary
-
-The hosted system separates the public app from local model/neural services using an authenticated gateway. Private addresses, credentials, tunnel details and production identifiers are not published here.
-
-The source includes or documents:
-
-- bearer-protected state changes
-- loopback-first local services
-- public-field allowlists
-- request/model boundary limits
-- secret exclusion
-- security/privacy regression testing
-- fail-closed deployment checks
-
-## Composition and materials
-
-The source at this milestone includes:
-
-- composition-vision teacher
-- learned room-derived art policy
-- expanded subject catalog and material systems
-- neural overlays and Zebra critic UI
-
-## Production-only boundary
-
-Private production routing, tunnel configuration, credentials, node restart/health tooling, deployment metadata, and operator-specific security automation remain outside the public repository.
+Start with [local setup](LOCAL-RUN.md). See [SECURITY.md](../SECURITY.md) for actual application/service controls and [CONTRIBUTING.md](../CONTRIBUTING.md) for contribution guidance.

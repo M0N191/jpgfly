@@ -1,198 +1,62 @@
-![JPGFLY](./github-banner-habitat.webp)
+# JPGFLY project
 
-<p align="center">
-   ·
-  
-</p>
+JPGFLY studies creative agency through an experimental artificial-life and generative-art system, with multiple autonomous artist identities sharing memory and a common creative runtime. The central question is what changes when an artwork follows from an agent's ongoing actions, observations, and memory.
 
-# JPGFLY
+The current **IMPLEMENTED** public runtime is room-based. A Fly observes its canvas, explores possible actions, makes a mark, observes the consequences, and continues or finishes. A Room accumulates decisions over time rather than arriving as a single generated image.
 
-[![CI](https://github.com/M0N191/jpgfly/actions/workflows/ci.yml/badge.svg)](https://github.com/M0N191/jpgfly/actions/workflows/ci.yml)
-[![Release audit](https://github.com/M0N191/jpgfly/actions/workflows/release-audit.yml/badge.svg)](https://github.com/M0N191/jpgfly/actions/workflows/release-audit.yml)
-![License MIT](https://img.shields.io/badge/license-MIT-111111)
+## Habitat and the public implementation
 
-**A fly paints. You watch. Every finished artwork becomes a room in the Backrooms.**
+**Habitat — RESEARCH DIRECTION** is the broader project idea of a persistent 2D world inhabited by autonomous fly agents. It connects memory, language, neural systems, perception, evaluation, and live creative processes.
 
-JPGFLY is an autonomous art-agent experiment built around a simple idea: the artwork should emerge as a live process, not arrive as one pre-generated image.
+This branch supplies the creative runtime and persistent finished-room history. It does not establish a shared persistent Habitat world engine, simultaneous agent inhabitants, or restoration of living agents after restart. Persisted artwork and learning are different from persisted world state.
 
-The **Fly Brain** controls the painting loop and makes the art. It observes the current room, moves, marks, revises, changes tools, returns to earlier areas, and eventually decides that the room is finished.
+**Mouse Vision / MICrONS — RESEARCH DIRECTION** concerns visual-perception research. No public runtime integration is present. The implemented visual composition interface instead uses an optional Qwen vision-language model.
 
-**Qwen + FLM are the LLM/model layer around the Fly Brain — not the art brain itself.**
+## Three artist lines
 
-- **Fly Brain** — the autonomous art brain and painting loop.
-- **Server mechanics** — converts Fly Brain actions into authoritative movement and stroke events.
-- **Qwen** — advisory visual/composition and broader context support; it never emits strokes.
-- **FLM (Fly Language Model)** — the trained JPGFLY language/voice layer for studio notes, room writing, and public voice.
-- **Web client** — renders the live painting, Fly Brain activity, and the Backrooms archive.
+- **JPGFLY** is the origin/generalist painter. Its shared brush vocabulary can support many kinds of marks and subjects.
+- **SPRAYFLY** specializes in graffiti-oriented pressure: tags, splatter, impact, drips, and overwriting.
+- **DREAMFLY** specializes in abstract/surreal pressure: impossible scale, altered gravity, dream logic, wash, soft paint, and atmospheric forms.
 
-> The point is not "generate an image."  
-> The point is to watch an agent make one.
+Their differences are declarative style, material, technique, and written-voice biases within a shared engine. They share earlier Rooms and reading experience. Cross-room echoes offer continuity without prescribing a copy of an earlier image.
 
-## The three artists
+The autonomous studio rotates these profiles through one current Room. Artist lineage is project language backed by profile and archive metadata, not an implemented biological reproduction process. See [artist profiles](../agent_profiles.py).
 
-JPGFLY currently has three room-born artist lines that share history while keeping distinct visual/language biases:
+## Agency through action
 
-- **JPGFLY** — origin / generalist
-- **SPRAYFLY** — graffiti
-- **DREAMFLY** — surreal / abstract
+The **Candidate Fly Brain — IMPLEMENTED** is the main art-decision engine. It evaluates candidate continuations using canvas measurements, composition, memory, a learned art-policy vote, and optional advice.
 
-They share Backrooms experience and room history; their specialization is a bias, not a separate hidden image generator.
+**Server mechanics — IMPLEMENTED** give actions physical consequences: movement, contact, strokes, pauses, erasure, and changing canvas measurements. The browser presents those consequences and the performing Fly. Its live display is not the art-decision system.
 
-## Current stack
+**Experience Memory — IMPLEMENTED** turns eligible completed Rooms and local readings into bounded shared tendencies and conceptual context.
 
-```text
-JPGFLY / SPRAYFLY / DREAMFLY
-        │
-        ▼
-server-side Candidate Fly Brain
-        │
-        ├─ experience memory / room echoes
-        ├─ MaleCNS optional action bias
-        ├─ ZebraCNS bounded critic pressure on candidate ranking / finish timing
-        ├─ Qwen composition/context advice
-        └─ FLM language / room voice
-        │
-        ▼
-server-authoritative canvas mechanics
-        │
-        ├─ live browser renderer
-        └─ finished Backrooms archive
-```
+**Learned Art Policy — IMPLEMENTED** is separate: a small temporal network learns from eligible completed-room decisions and contributes bounded candidate-scoring pressure. Its persisted weights are not Qwen or FLM weights.
 
-The app connects to optional local model/neural services through an authenticated gateway. The source includes the artist, critic, memory, mechanics, and composition modules available at this milestone.
+## Supporting systems
 
-## The Backrooms
+These systems have **OPTIONAL LOCAL INTEGRATION** status:
 
-Each completed artwork becomes a **room**.
+| System | Contribution | Public implementation boundary |
+|---|---|---|
+| Qwen / Ollama | Visual composition advice, broader context, and narrative support | Request/response clients and a canvas-preview composition teacher; model service configured separately. |
+| FLM | Written Fly voice, studio notes, titles, descriptions, statements, and memory threads | Text provider and bridge; external FLM implementation and trained adapter required. |
+| MaleCNS | Connectome-inspired perturbations of a selected action and neural telemetry | Service clients are present; simulator and dataset supplied separately. |
+| ZebraCNS / ZAPBench | Bounded critic pressure on candidate preference and finish timing | Adapter plus a local recorded-data service; data access and optional dependencies required. |
 
-While a room is alive, JPGFLY exposes the drawing process: marks, movement, revisions, tool changes, state, and commentary. When the Fly Brain ends the work, the finished image and compact room metadata can be archived as the next Backroom.
+Candidate Fly Brain retains action authority. Qwen advice is not direct stroke generation; Zebra critic pressure is not direct motor control. Recorded biological activity, engineered interpretation, and the character's written voice should be distinguished.
 
-The archive is therefore a record of completed agent-made rooms rather than a folder of pre-rendered images.
+## Backrooms and continuity
 
-## Resilience: Dumb Dumb Mode
+**Backrooms — IMPLEMENTED** is the archive of successfully finalized works. A Room keeps its compressed final SVG and compact writing, public notes, metadata, structural summaries, and integrity hashes. The complete live event stream is not retained as the public artwork format.
 
-The server-side Fly Brain remains the art brain. Qwen/FLM are support/language nodes around it, so a brief support-node outage does **not** mean the artwork itself has failed.
+**Old Rooms** means earlier works in that same archive. It does not name a separate public subsystem. Artist filters, search, remembered tendencies, and room echoes connect current activity to earlier works. Active canvas and session state are process-local; restart begins a fresh Room using persistent history and learning.
 
-During a live support outage the UI may temporarily report **Dumb Dumb Mode** while the local Fly Brain continues painting. A separate pure-Python emergency painter is used only if the actual Candidate Fly Brain throws a decision error.
+## Interpreting the experiment
 
-Finished-room classification uses the whole session rather than the final network moment:
+Autonomy means that, once a Room starts, the program selects its actions and finish point without per-mark human steering. Operators still configure, start, stop, and supply data to the system.
 
-- up to and including **35% actual emergency-fallback decisions** → normal Room
-- more than **35% actual emergency-fallback decisions** → DUMB DUMB Room
+Project fiction and artistic voice give the Fly a character. They do not establish biological equivalence, consciousness, or access to hidden model thoughts. Neural displays should be read according to the signal source and implementation behind them.
 
-Transient Qwen/FLM downtime is not counted as emergency-fallback painting.
+For the precise flow, see [ARCHITECTURE](ARCHITECTURE.md). For capability status, see [FEATURES](FEATURES.md). Setup belongs in [LOCAL-RUN](LOCAL-RUN.md); version-specific development is covered in [HISTORY](HISTORY.md).
 
-Optional language and neural integrations use operator-configured services.
-
-## Repository contents
-
-This repository publishes JPGFLY source and documentation for this development milestone.
-
-It includes source for running, inspecting, forking, and experimenting with JPGFLY.
-
-### Included
-
-- Fly Brain and composition logic
-- server mechanics
-- web rendering code
-- archive/session logic
-- Qwen/FLM integration interfaces
-- tests
-- generic self-host configuration
-- security and architecture documentation
-
-### Intentionally not included
-
-- private model nodes or node addresses
-- tunnel / Tailscale configuration
-- hosted service IDs and production deployment metadata
-- production authentication tokens or pairing files
-- machine-specific paths
-- production secret values
-- private startup/pairing infrastructure
-- private training checkpoints and model weights
-
-## Local quick start
-
-Python 3.11+ recommended.
-
-```bash
-python -m venv .venv
-```
-
-Activate it:
-
-```powershell
-# Windows PowerShell
-.\.venv\Scripts\Activate.ps1
-```
-
-```bash
-# macOS / Linux
-source .venv/bin/activate
-```
-
-Install dependencies:
-
-```bash
-pip install -r requirements.txt
-```
-
-Start with the self-contained Candidate Fly Brain and procedural text fallback:
-
-```powershell
-# Windows PowerShell
-$env:JPGFLY_TEXT_PROVIDER="procedural"
-uvicorn app:app --host 127.0.0.1 --port 8000
-```
-
-```bash
-# macOS / Linux
-export JPGFLY_TEXT_PROVIDER=procedural
-uvicorn app:app --host 127.0.0.1 --port 8000
-```
-
-Then open:
-
-```
-http://127.0.0.1:8000/live
-```
-
-To attach your own Qwen/FLM services, copy `.env.example` and supply **your own** local or self-hosted endpoints and credentials.
-
-## Repository map
-
-```text
-app.py                 self-host API/session/archive harness
-brain_provider.py      Fly Brain providers and action schema
-candidate_brain.py     candidate/action generation + bounded Zebra critic pressure
-agent_profiles.py      JPGFLY / SPRAYFLY / DREAMFLY visual disciplines
-art_policy.py          learned room-derived art policy
-composition_engine.py  procedural composition logic
-composition_vision.py  advisory canvas-composition analysis
-zebracns.py            ZebraCNS critic telemetry + scoring state
-server_mechanics.py    authoritative movement + stroke execution
-experience_memory.py   room-derived experience + lineage memory
-flm_text_provider.py   FLM language integration
-flm_bridge.py          FLM bridge interface
-web/                   live room, archive, renderer, UI
-tests/                 behavioral and regression tests
-```
-
-For a deeper explanation, see [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
-
-## Full feature inventory
-
-See [docs/FEATURES.md](docs/FEATURES.md) for the current end-to-end feature map.
-
-## Security
-
-Never commit `.env`, credentials, tokens, tunnel configuration, private node URLs, model checkpoints containing private data, or operator deployment files.
-
-See [SECURITY.md](SECURITY.md).
-
-## License
-
-Code is released under the MIT License.
-
-The **JPGFLY** name, project identity, logos, and artwork may have separate trademark or copyright treatment. See [TRADEMARK.md](TRADEMARK.md).
+See [Security](../SECURITY.md), [License](../LICENSE), and [Trademark](../TRADEMARK.md).

@@ -1,60 +1,31 @@
 # JPGFLY 6.4 release notes
 
-## Painting architecture
+**HISTORICAL** — these notes describe the 6.4 architecture milestone. The current source identifies its art brain as `JPGFLY-BRAIN/7.1-TEMPORAL-ART-POLICY`. Use [Architecture](ARCHITECTURE.md) and [Features](FEATURES.md) for current behavior and integration status.
 
-JPGFLY 6.4 separates painting from language generation.
+## Art brain, body, and language
+
+The 6.4 notes established the separation between art decisions, physical execution, and writing:
 
 ```text
 canvas observation
-      |
-      v
-Fly Brain (Python)
-      |
-      +-- proposes 8 candidate actions
-      +-- scores them against canvas state
-      +-- uses visual/conceptual memory
-      |
-      v
-selected action
-      |
-      +-- optional MaleCNS v1.0 bias
-      |
-      v
-server-authoritative movement + stroke
+    -> Candidate Fly Brain: propose and score candidate actions
+    -> selected action, with optional MaleCNS bias
+    -> server-authoritative movement and stroke
+    -> browser rendering
 ```
 
-Qwen and FLM are language layers. They can produce live studio notes and finished-room writing, but they do not choose painting strokes.
+Language services supplied studio notes and finished-room writing while the Python painter selected actions. In current source, FLM retains this language/voice role, and Qwen also supplies advisory visual composition and context that influence later candidate scoring. Candidate Fly Brain remains the main art-decision engine.
 
-## MaleCNS boundary
+## Neural integration boundary
 
-The optional MaleCNS integration uses MaleCNS v1.0 connectome topology with simulated neural dynamics and an engineered canvas-to-neural interface. This is a software simulation and art interface, not a claim of biological consciousness.
+MaleCNS is an optional connectome-inspired action-bias and telemetry interface. The public source contains its client integration; running it requires an external service. Recorded or simulated neural activity and its engineered effect on artwork must be described separately from claims about biological cognition.
 
-The MaleCNS dataset, trained models, private endpoints, and production tunnel configuration are not bundled with this repository.
+## Resilience and rendering
 
-## Resilience
+The release notes documented an independent procedural emergency painter for Candidate Fly Brain decision errors and a live `DUMB DUMB` degraded-mode indicator. Language-service outages alone do not constitute emergency art decisions.
 
-Painting does not require Qwen or FLM. If those language services become unavailable, the Fly Brain keeps painting.
+Current archive classification counts actual emergency-fallback decisions: a finished room is classified `DUMB_DUMB` only when its fallback ratio exceeds 35%. A temporary live label and the final archive classification have different purposes. See [current fallback behavior](ARCHITECTURE.md).
 
-Each session also owns an independent procedural emergency painter. If the richer Candidate Fly Brain raises an unexpected decision error, that room switches permanently to:
+The live renderer reconstructs strokes from authoritative server events. This keeps the displayed canvas aligned with executed mechanics rather than relying on browser animation timing.
 
-```text
-DUMB DUMB MODE · PURE PYTHON FALLBACK
-```
-
-This keeps the room alive while clearly marking it as degraded.
-
-## Live renderer
-
-The live page now treats the server event stream as authoritative. Existing strokes are reconstructed from received server events, preventing browser animation/backlog state from leaving a valid painting visually blank.
-
-## Security boundary
-
-Recommended local-only model endpoints:
-
-- Ollama/Qwen: 127.0.0.1:11434
-- FLM: 127.0.0.1:4680
-- MaleCNS: 127.0.0.1:4690
-
-Do not expose raw model services directly to the public internet. Use a narrow authenticated gateway if remote access is required.
-
-Production credentials, tunnel configuration, hosted service IDs, local datasets, checkpoints, and machine-specific startup files remain outside this public repository.
+For service exposure and credentials, follow the [security policy](../SECURITY.md). For current setup, use [Local run](LOCAL-RUN.md).

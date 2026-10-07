@@ -1,39 +1,32 @@
-# Security Policy
-
-## Public repository boundary
-
-This repository contains source code only. Production credentials, model nodes, tunnels,
-operator configuration, hosted service IDs, private endpoints, and private training artifacts
-must stay outside Git.
+# Security policy
 
 ## Reporting
 
-If you discover a vulnerability that could expose a real JPGFLY deployment, do not publish
-working credentials, private endpoints, personal data, or exploit details in a public issue.
-Use GitHub's private vulnerability reporting / security advisory features when available.
+Report vulnerabilities through GitHub's private vulnerability reporting or security advisory features when available. Do not put working credentials, personal data, private endpoints, or exploit details in public issues. If private reporting is unavailable, open an issue asking for a private reporting channel without disclosing the vulnerability.
 
-## Deployment guidance
+## Application controls
 
-- Generate unique secrets for every deployment.
-- Keep secrets in the hosting platform's secret store or local environment.
-- Do not expose Ollama/FLM endpoints directly to the public internet without authentication.
-- Bind local-only services to loopback unless remote access is explicitly required.
-- Put public deployments behind HTTPS.
-- Treat any copied `.env` or pairing token as sensitive.
-- Never reuse the operator's production credentials in a fork.
+The [HTTP middleware](app.py) requires `Authorization: Bearer <JPGFLY_CONTROL_TOKEN>` for control methods when that credential is configured. Without it, control requests are limited to loopback clients. Public deployment mode requires a control credential of at least 32 characters and validates writable storage outside the public web directory.
 
-## Local model-service boundary
+The application applies security headers and rejects declared request bodies above its configured size limit. These controls do not replace deployment-level authentication, TLS, request limits, and careful proxy configuration.
 
-Keep optional model services loopback-only unless you intentionally place an authenticated boundary in front of them.
+- Bind local development to `127.0.0.1`.
+- Use HTTPS for remote access and restrict control routes to authorized callers.
+- Generate unique credentials for each deployment and keep `.env` files and service credentials outside Git.
+- Review how the reverse proxy supplies client addresses and which routes it exposes.
 
-Typical local ports:
+## Optional model and neural services
 
-- Ollama/Qwen: `127.0.0.1:11434`
-- FLM bridge: `127.0.0.1:4680`
-- authenticated model gateway: `127.0.0.1:4681`
-- MaleCNS service: `127.0.0.1:4690`
-- ZebraCNS service: `127.0.0.1:4770`
+Keep Qwen/Ollama, FLM, MaleCNS, and ZebraCNS services on loopback unless remote access has an authenticated boundary. Expose only the needed routes, with TLS and request-size limits. A separately configured gateway is deployment infrastructure, not a bundled JPGFLY service.
 
-Do not expose raw Ollama, FLM, MaleCNS or ZebraCNS endpoints directly to the public internet. If remote access is required, use a narrow authenticated gateway, separate credentials from application control credentials, TLS, request-size limits, and a route allowlist.
+The [FLM bridge](flm_bridge.py) defaults to loopback access. Enabling remote bridge access requires `JPGFLY_FLM_AUTH_TOKEN` with at least 32 characters. The application also supports bearer credentials for FLM and Ollama clients; verify client configuration before exposing a service.
 
-The Fly Brain itself is Python and can continue painting during short language/model outages. A genuine Candidate Fly Brain decision failure switches to the independent DUMB DUMB pure-Python emergency painter. Finished Rooms remain normal through 35% actual emergency-fallback decisions; only a ratio above 35% is archived as DUMB DUMB.
+Treat model outputs and ingested reading material as untrusted input. Review prompt construction, generated public text, and any new filesystem or network access together. External model implementations, adapters, checkpoints, and neural datasets need their own access controls.
+
+## Persistent data
+
+Completed rooms, Experience Memory, and Learned Art Policy contain creative history and influence later behavior. Store them outside `web/`, restrict filesystem access, and back them up before maintenance. Use a persistent data directory for deployments that must retain this history.
+
+Avoid ingesting confidential reading material or personal data into an installation that exposes room writing and metadata publicly. Do not commit runtime archives, local model artifacts, or machine-specific credentials.
+
+See [Local run](docs/LOCAL-RUN.md) for setup and [Architecture](docs/ARCHITECTURE.md) for runtime and fallback behavior.
