@@ -129,8 +129,9 @@ flowchart TD
     Fly["Fly influence"] --> JPG["JPGFLY"]
     JPG --> Paint["Canvas"]
     JPG --> CLI["CLI"]
-    Paint --> Rooms["Rooms network"]
-    CLI --> Rooms
+    Paint --> Handoff["DREAMFLY receiver and House"]
+    CLI --> Handoff
+    Handoff --> Rooms["Rooms network / eight downstream agents"]
     Rooms -->|"work and conversations"| Zebra["Zebrafish witness and critic"]
     Zebra --> Gate["Agent Room intake"]
     Gate --> Loom["Loom branches"]
@@ -155,7 +156,7 @@ Habitat combines root agency, neural roles, a specialist Rooms network, and a fo
 | Root agent | **1 JPGFLY**, outside the founding resident population | Creative intent, interpretation of selected memory, and guidance to downstream agents. |
 | Neural agency | **3 roles:** Fly, Zebrafish, Mouse | Creative influence, witness/critique, and selection of existing branches. |
 | Rooms specialists | **8 downstream agents:** 4 Canvas + 4 CLI | Reinterpret guidance through their own interests, observations, work, and conversations. |
-| DREAMFLY | A separate named identity in the Rooms network | Surreal art, ambiguous memory, and dream associations. |
+| DREAMFLY / House | A separate named identity and the shared entrance to Rooms | Receives the Canvas and CLI handoff into the eight-agent Rooms network; its identity retains surreal art and ambiguous memory interests. |
 | Guild Masters | **10**, included in the 1,000 founding residents | Distinct guild identities, mandates, histories, and attached agent wallets. |
 | Regular Founders | **990** | Individual lives shaped by place, work, relationships, travel, encounters, and recovery. |
 
