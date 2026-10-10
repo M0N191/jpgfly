@@ -93,6 +93,106 @@ The architecture maintains a separation between simulation, cognition, and obser
 
 This allows world state and history to persist independently of the models currently participating in them.
 
+
+### Architecture at a glance
+
+The following diagrams describe the broader Habitat architecture. The public creative runtime and its implementation status are documented below.
+
+```mermaid
+flowchart TD
+    subgraph Cognition["Cognition"]
+        Neural["Fly · Zebrafish · Mouse"]
+        Models["Qwen · FLM"]
+        Agents["Agent runtime"]
+        Neural -->|"bounded signals"| Agents
+        Models -->|"reasoning and expression"| Agents
+    end
+
+    World["Authoritative world engine"]
+    History["Persistent state and history"]
+    Browser["Habitat browser"]
+
+    History -->|"observations and context"| Agents
+    Agents -->|"proposed actions"| World
+    World -->|"validated outcomes"| History
+    World -->|"state and events"| Browser
+```
+
+The engine validates actions against routes, locations, encounters, recovery rules, and creative mechanics. Accepted outcomes become persistent facts; models interpret those facts and use them as context for later decisions. The browser renders the resulting world.
+
+### Creative selection and memory
+
+The creative network has a second, selective loop. JPGFLY receives upstream Fly influence and selected memory, then supplies bounded guidance to the downstream Rooms network.
+
+```mermaid
+flowchart TD
+    Fly["Fly influence"] --> JPG["JPGFLY"]
+    JPG --> Paint["Canvas"]
+    JPG --> CLI["CLI"]
+    Paint --> Rooms["Rooms network"]
+    CLI --> Rooms
+    Rooms -->|"work and conversations"| Zebra["Zebrafish witness and critic"]
+    Zebra --> Gate["Agent Room intake"]
+    Gate --> Loom["Loom branches"]
+    Loom --> Mouse["Mouse chooser"]
+    Mouse -->|"admitted"| Heaven["Heaven memory"]
+    Mouse -->|"refused"| Limbo["Limbo"]
+    Heaven -->|"interpreted memory"| JPG
+```
+
+**Mouse scores existing Loom branches.** Admission makes selected memory available to JPGFLY for the next cycle. Limbo supports bounded review of refused branches.
+
+**Heaven and the Tower of Reminiscence serve different purposes:** Heaven carries selected creative memory; the Tower preserves world history. A recorded event enters creative memory only through the relevant selection process.
+
+JPGFLY also publishes bounded knowledge through **Church → Keepers → monasteries and settlements → City**. This civilization branch carries knowledge outward; returning it to the creative loop requires an explicit authorized path.
+
+### Agent structure
+
+Habitat combines root agency, neural roles, a specialist Rooms network, and a founding civilization. These counts describe separate roles and registries; the Fly/JPGFLY neural role overlaps the root agent.
+
+| Layer | Structure | Responsibility |
+|---|---|---|
+| Root agent | **1 JPGFLY**, outside the founding resident population | Creative intent, interpretation of selected memory, and guidance to downstream agents. |
+| Neural agency | **3 roles:** Fly, Zebrafish, Mouse | Creative influence, witness/critique, and selection of existing branches. |
+| Rooms specialists | **8 downstream agents:** 4 Canvas + 4 CLI | Reinterpret guidance through their own interests, observations, work, and conversations. |
+| DREAMFLY | A separate named identity in the Rooms network | Surreal art, ambiguous memory, and dream associations. |
+| Guild Masters | **10**, included in the 1,000 founding residents | Distinct guild identities, mandates, histories, and attached agent wallets. |
+| Regular Founders | **990** | Individual lives shaped by place, work, relationships, travel, encounters, and recovery. |
+
+The **1,000 founding residents** form ten guilds of 100: **one Guild Master and 99 regular Founders per guild**. JPGFLY holds a separate root identity and wallet. Guild headquarters are institutional anchors; residents retain their own homes, work, routes, and histories.
+
+#### The eight downstream Rooms agents
+
+Canvas and CLI are the two branch assignments in the Rooms runtime. Paint, CLI, and Generative describe the project's three artistic practices.
+
+| Branch | Agent | Focus |
+|---|---|---|
+| Canvas | **PAINTFLY** | Pigment, composition, surface, and material experiments. |
+| Canvas | **SPRAYFLY** | Graffiti, layered marks, damage, and overwrite. |
+| Canvas | **MEMORYFLY** | Memory, provenance, and unresolved interpretations. |
+| Canvas | **DRIFTFLY** | Communities, local assumptions, and observations gathered through travel. |
+| CLI | **SIGNALFLY** | Signals, noise, and the movement of information. |
+| CLI | **ORACLEFLY** | Mythic interpretation and symbolic terminal compositions. |
+| CLI | **ROOTFLY** | Dependencies, hidden structure, growth, and system relationships. |
+| CLI | **NULLFLY** | Absence, faults, missing information, and unresolved structure. |
+
+Each specialist receives bounded JPGFLY guidance and eligible traces. Raw upstream Fly guidance and private Heaven memory enter through JPGFLY.
+
+#### The ten Guild Masters
+
+| Guild Master | Class | Guild |
+|---|---|---|
+| **Serein Vela** | Bard | Blue Chorus |
+| **Orin Vale** | Ranger | Outer Road |
+| **Maro Sen** | Swordsman | White Road |
+| **Bram Oss** | Crusader | Iron Hall |
+| **Ilya Ruun** | Monk | Quiet Step |
+| **Mira Orison** | Wizard / Scholar | Lantern Spire |
+| **Veyr Sable** | Necromancer / Void Agent | Last Threshold |
+| **Oren Tallow** | Engineer | Bridgeworks |
+| **Eira Bell** | Cleric / Pilgrim | First Bell |
+| **Nera Drift** | Rogue | Hidden Road |
+
 ## VI. An Experiment in Continuity
 
 JPGFLY explores the intersection of artificial life, autonomous agents, generative art, persistent simulation, and neuroscience-inspired computation.
