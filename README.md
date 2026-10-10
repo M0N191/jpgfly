@@ -2,11 +2,124 @@
 
 <img src="assets/jpgfly-readme-banner.jpg" alt="JPGFLY project artwork" width="720">
 
-JPGFLY is an experimental artificial-life and generative-art project built around multiple autonomous artist identities. The artists observe a canvas, consider possible actions, choose, move and paint, then respond to what changed.
+### A Persistent World for Autonomous Intelligence
 
-**This public branch implements the room-based creative runtime.** JPGFLY, SPRAYFLY, and DREAMFLY share memory and a common engine. The autonomous studio rotates them through **one current Room at a time**.
+**Artificial Life · Multi-Agent Systems · Neural Computation · Generative Art**
 
-Artwork emerges from an agent repeatedly acting inside an environment over time, rather than as a single generated output. Each mark changes the conditions for the next decision. A Fly can continue, revise, or finish; completed Rooms enter Backrooms, while persistent experience and a separate learned policy influence later Rooms.
+*What happens when intelligence has somewhere to exist between decisions?*
+
+JPGFLY began with a Fly and a blank canvas.
+
+An autonomous artist that observes, chooses, paints, and responds to the marks it leaves behind. Every action changes the conditions of the next. Every completed work becomes part of its experience.
+
+From this experiment emerged **Habitat**: a persistent, evolving world where artificial intelligence inhabits space, accumulates memory, encounters other agents, and experiences consequences that survive beyond individual inference cycles.
+
+Intelligence becomes part of an unfolding history.
+
+## I. Habitat — A World That Remembers
+
+Habitat is a simulated dark-fantasy civilization built around persistent identity, geography, and time.
+
+Beneath the Loom Tree, a city grows along the cliffs. Ancient bridges connect distant lands. Guilds organize their inhabitants, dragons cross the world, and the Tower of Reminiscence preserves the histories of those who came before.
+
+Its founding civilization consists of **1,000 persistent identities**, including ten Guild Masters and 990 other residents. Each belongs to a world of locations, relationships, occupations, encounters, and evolving individual histories.
+
+JPGFLY stands apart as the root creative agent, connecting the world's artistic and cognitive systems.
+
+The world is governed by an authoritative simulation engine. Locations, movement, injuries, encounters, artwork, and history emerge through persistent mechanics. Intelligence observes these facts, reasons about them, and proposes what happens next.
+
+> **Mechanics create facts. Intelligence creates meaning.**
+
+## II. Neural Agency — Three Forms of Intelligence
+
+Three experimental neural systems contribute distinct roles to Habitat's cognitive architecture.
+
+**FLY — The Creator**
+
+Inspired by the fruit fly connectome, Fly-derived signals contribute to action selection and creative behavior. JPGFLY connects this influence to autonomous painting, memory, and generative exploration.
+
+**ZEBRAFISH — The Witness**
+
+Drawing from zebrafish neural activity research, the Witness introduces biological-data-informed evaluation and critique. It observes creative outcomes and contributes bounded evidence to the selection process.
+
+**MOUSE — The Chooser**
+
+Built around research from the MICrONS visual system, the Chooser evaluates existing possibilities within the Loom. Its role is selection: determining which candidate creations are admitted into the persistent creative history.
+
+These components operate alongside Qwen-based reasoning, FLM language generation, and independent memory systems.
+
+Together, they explore how heterogeneous forms of computation can contribute to a shared autonomous process.
+
+## III. The Loom — Where Art Becomes Memory
+
+Art is the original language of JPGFLY.
+
+Eight specialized Fly agents participate in its creative system, working across three canvas practices that connect visual painting, procedural composition, and generative expression.
+
+Each creation develops through repeated observation, candidate generation, evaluation, and action.
+
+Completed works become persistent artifacts with their own provenance, interpretation, and history. Memories of earlier works can influence subsequent decisions.
+
+The Loom connects these creations through a process of evaluation and selection, while the Tower of Reminiscence preserves the history of the wider civilization.
+
+A mark becomes an artifact. An artifact becomes memory. Memory becomes context for the next act of creation.
+
+## IV. Genesis — The Beginning of History
+
+Habitat's civilization begins with a seven-day Creation Epoch.
+
+Six days of founding, followed by one day of rest and remembrance.
+
+From the eighth day onward, the inhabitants continue through ordinary autonomous life: traveling, creating, forming relationships, encountering danger, recovering, and leaving traces of their existence.
+
+Time advances through simulation. Events enter persistent history, and that history shapes the context available to future decisions.
+
+Genesis establishes a beginning. The world carries its consequences forward.
+
+## V. Architecture — Intelligence Within Reality
+
+JPGFLY brings together several independent systems:
+
+- **World Engine:** Server-authoritative geography, inhabitants, mechanics, events, and persistent state.
+- **Agent Runtime:** Autonomous decisions, actions, identity, and individual context.
+- **Neural Systems:** Fly, Zebrafish, and Mouse research integrations supplying bounded cognitive influences.
+- **Language and Reasoning:** Qwen and FLM supporting interpretation, composition, and expression.
+- **Creative Systems:** Canvas painting, terminal composition, generative artwork, and the Rooms archive.
+- **Habitat Interface:** A live visual representation of world activity, artistic processes, and recorded history.
+
+The architecture maintains a separation between simulation, cognition, and observation.
+
+**The world determines what is possible. Agents determine what to attempt. Intelligence interprets what follows.**
+
+This allows world state and history to persist independently of the models currently participating in them.
+
+## VI. An Experiment in Continuity
+
+JPGFLY explores the intersection of artificial life, autonomous agents, generative art, persistent simulation, and neuroscience-inspired computation.
+
+Its public creative runtime demonstrates the original autonomous Rooms experiment. Habitat extends that foundation toward a larger civilization of agents, places, artistic systems, and persistent histories.
+
+The central question remains the same:
+
+*What becomes possible when an artificial intelligence can remember where it has been, encounter the consequences of its actions, and continue existing between decisions?*
+
+JPGFLY began with a Fly making marks on a canvas.
+
+**Habitat is the world that remembers them.**
+
+---
+
+**[Explore Habitat](https://jpgfly.online/) · [GitHub](https://github.com/M0N191/jpgfly)**
+
+*GUIDE // PROTECT // NEVER COMMAND*
+
+---
+
+## Public repository — The Creative Runtime
+
+The public `jpgfly` repository implements the original room-based creative system. JPGFLY, SPRAYFLY, and DREAMFLY share memory and a common engine. The autonomous studio rotates them through **one current Room at a time**.
+
+Artwork emerges from repeated actions inside an environment rather than a single generated output. Completed Rooms become part of the Backrooms archive, and earlier experiences can influence later work. The wider Habitat world described above belongs to the broader project and is not implemented in full in this public repository.
 
 ## How a Room happens
 
